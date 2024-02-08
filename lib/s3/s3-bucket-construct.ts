@@ -36,7 +36,6 @@ export class S3BucketConstruct extends Construct {
      * Creates an S3 bucket with lifecycle rules and encryption.
      * @param bucketName - Name of the S3 bucket
      * @param id - ID of the S3 bucket
-     * @returns Bucket
      */
     private createBucket(bucketName: string, id: string): Bucket {
         return new Bucket(this, id, {
