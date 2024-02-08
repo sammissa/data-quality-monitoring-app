@@ -16,7 +16,6 @@ interface S3BucketConstructProps {
  * Constructs an input and output S3 bucket with lifecycle rules and encryption.
  * @property inputBucket - Input S3 bucket containing content provider data files.
  * @property outputBucket - Output S3 bucket where content provider data quality results will be stored.
- * @extends Construct
  */
 export class S3BucketConstruct extends Construct {
     public readonly inputBucket: Bucket;

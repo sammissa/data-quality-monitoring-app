@@ -1,0 +1,54 @@
+name: Build CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: [18.x] #['8', '10', '12']
+        os: [ubuntu-latest] #[ubuntu-latest, windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Print Node.js Version
+        run: node --version
+
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm install aws-cdk -g
+
+      - name: Run build
+        run: npm run build --if-present
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage
+
+      - name: Upload test coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test Results
+          path: coverage
+
+      - name: Generate Cloudformation template
+        run: cdk synth > template.yaml
+
+      - name: Upload Cloudformation template
+        uses: actions/upload-artifact@v4
+        with:
+          name: Cloudformation Template
+          path: template.yaml
