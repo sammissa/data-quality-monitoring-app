@@ -32,6 +32,7 @@ jobs:
         uses: super-linter/super-linter@v6.0.0
         env:
           DEFAULT_BRANCH: "main"
+          LINTER_RULES_PATH: /
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_TYPESCRIPT_ES: true
           TYPESCRIPT_ES_CONFIG_FILE: .eslintrc.js
