@@ -1,11 +1,11 @@
 import { App, Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { S3BucketConstruct } from '../../lib/s3/s3-bucket-construct';
+import { S3Bucket } from '../../lib/s3/s3-bucket';
 
 /**
- * Unit tests for the {@link S3BucketConstruct} class.
+ * Unit tests for the {@link S3Bucket} class.
  */
-describe('S3BucketConstruct', () => {
+describe('S3Bucket', () => {
   let template: Template;
 
   const defaultS3BucketProps = {
@@ -43,7 +43,7 @@ describe('S3BucketConstruct', () => {
     };
 
     // Act
-    new S3BucketConstruct(stack, 'TestS3BucketConstruct', s3BucketConstructProps);
+    new S3Bucket(stack, 'TestS3Bucket', s3BucketConstructProps);
     template = Template.fromStack(stack);
   });
 
