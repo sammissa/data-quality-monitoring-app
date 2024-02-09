@@ -18,38 +18,38 @@ interface S3BucketConstructProps {
  * @property outputBucket - Output S3 bucket where content provider data quality results will be stored.
  */
 export class S3BucketConstruct extends Construct {
-    public readonly inputBucket: Bucket;
-    public readonly outputBucket: Bucket;
+  public readonly inputBucket: Bucket;
+  public readonly outputBucket: Bucket;
 
-    constructor(scope: Construct, id: string, props: S3BucketConstructProps) {
-        super(scope, id);
+  constructor(scope: Construct, id: string, props: S3BucketConstructProps) {
+    super(scope, id);
 
-        // Create the input S3 bucket and enable EventBridge notification
-        this.inputBucket = this.createBucket(props.inputBucketName, 'InputBucket');
-        this.inputBucket.enableEventBridgeNotification();
+    // Create the input S3 bucket and enable EventBridge notification
+    this.inputBucket = this.createBucket(props.inputBucketName, 'InputBucket');
+    this.inputBucket.enableEventBridgeNotification();
 
-        // Create the output S3 bucket
-        this.outputBucket = this.createBucket(props.outputBucketName, 'OutputBucket');
-    }
+    // Create the output S3 bucket
+    this.outputBucket = this.createBucket(props.outputBucketName, 'OutputBucket');
+  }
 
-    /**
+  /**
      * Creates an S3 bucket with lifecycle rules and encryption.
      * @param bucketName - Name of the S3 bucket
      * @param id - ID of the S3 bucket
      */
-    private createBucket(bucketName: string, id: string): Bucket {
-        return new Bucket(this, id, {
-            bucketName: bucketName, // Set the bucket name
-            versioned: true, // Enable versioning for the bucket
-            encryption: BucketEncryption.S3_MANAGED, // Use S3-managed encryption for the bucket
-            lifecycleRules: [ // Define lifecycle rules for the bucket
-                {
-                    enabled: true, // Enable the rule
-                    expiration: Duration.days(90), // Expire objects after 90 days
-                    noncurrentVersionExpiration: Duration.days(30), // Expire non-current versions after 30 days
-                    noncurrentVersionsToRetain: 2 // Retain 2 non-current versions
-                }
-            ],
-        });
-    }
+  private createBucket(bucketName: string, id: string): Bucket {
+    return new Bucket(this, id, {
+      bucketName: bucketName, // Set the bucket name
+      versioned: true, // Enable versioning for the bucket
+      encryption: BucketEncryption.S3_MANAGED, // Use S3-managed encryption for the bucket
+      lifecycleRules: [ // Define lifecycle rules for the bucket
+        {
+          enabled: true, // Enable the rule
+          expiration: Duration.days(90), // Expire objects after 90 days
+          noncurrentVersionExpiration: Duration.days(30), // Expire non-current versions after 30 days
+          noncurrentVersionsToRetain: 2 // Retain 2 non-current versions
+        }
+      ],
+    });
+  }
 }

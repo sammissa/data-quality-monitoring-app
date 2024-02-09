@@ -33,8 +33,7 @@ jobs:
         env:
           DEFAULT_BRANCH: "main"
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_TYPESCRIPT_STANDARD: true
-          TYPESCRIPT_DEFAULT_STYLE: ts-standard
-          TYPESCRIPT_STANDARD_TSCONFIG_FILE: ${DEFAULT_WORKSPACE}/tsconfig.json
+          VALIDATE_TYPESCRIPT_ES: true
+          TYPESCRIPT_ES_CONFIG_FILE: .eslintrc.js
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
