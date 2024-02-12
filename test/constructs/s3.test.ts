@@ -1,11 +1,11 @@
 import { App, Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { S3Bucket } from '../../lib/s3/s3-bucket';
+import { S3 } from '../../lib/constructs/s3';
 
 /**
- * Unit tests for the {@link S3Bucket} class.
+ * Unit tests for the {@link S3} class.
  */
-describe('S3Bucket', () => {
+describe('S3', () => {
   let template: Template;
 
   const defaultS3BucketProps = {
@@ -14,10 +14,10 @@ describe('S3Bucket', () => {
       ServerSideEncryptionConfiguration: [
         {
           ServerSideEncryptionByDefault: {
-            SSEAlgorithm: 'AES256',
-          },
-        },
-      ],
+            SSEAlgorithm: 'AES256'
+          }
+        }
+      ]
     },
     LifecycleConfiguration: {
       Rules: [
@@ -26,11 +26,11 @@ describe('S3Bucket', () => {
           ExpirationInDays: 90,
           NoncurrentVersionExpiration: {
             NoncurrentDays: 30,
-            NewerNoncurrentVersions: 2,
-          },
-        },
-      ],
-    },
+            NewerNoncurrentVersions: 2
+          }
+        }
+      ]
+    }
   };
 
   beforeEach(() => {
@@ -39,11 +39,11 @@ describe('S3Bucket', () => {
     const stack = new Stack(app, 'TestStack');
     const s3BucketConstructProps = {
       inputBucketName: 'test-input-bucket',
-      outputBucketName: 'test-output-bucket',
+      outputBucketName: 'test-output-bucket'
     };
 
     // Act
-    new S3Bucket(stack, 'TestS3Bucket', s3BucketConstructProps);
+    new S3(stack, 'TestS3', s3BucketConstructProps);
     template = Template.fromStack(stack);
   });
 
@@ -56,7 +56,7 @@ describe('S3Bucket', () => {
   test('creates an input S3 bucket with the correct properties', () => {
     const expectedInputBucketProps = {
       BucketName: 'test-input-bucket',
-      ...defaultS3BucketProps,
+      ...defaultS3BucketProps
     };
 
     // Assert
@@ -66,7 +66,7 @@ describe('S3Bucket', () => {
   test('creates an output S3 bucket with the correct properties', () => {
     const expectedOutputBucketProps = {
       BucketName: 'test-output-bucket',
-      ...defaultS3BucketProps,
+      ...defaultS3BucketProps
     };
 
     // Assert

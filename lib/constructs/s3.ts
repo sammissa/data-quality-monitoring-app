@@ -3,11 +3,11 @@ import { Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { Duration } from 'aws-cdk-lib';
 
 /**
- * Properties for S3BucketConstruct.
+ * Properties for S3 construct.
  * @param inputBucketName - Name of the input S3 bucket containing content provider data files.
  * @param outputBucketName - Name of the output S3 bucket where content provider data quality results will be stored.
  */
-export interface S3BucketProps {
+export interface S3Props {
     readonly inputBucketName: string;
     readonly outputBucketName: string;
 }
@@ -17,12 +17,12 @@ export interface S3BucketProps {
  * @property inputBucket - Input S3 bucket containing content provider data files.
  * @property outputBucket - Output S3 bucket where content provider data quality results will be stored.
  */
-export class S3Bucket extends Construct {
+export class S3 extends Construct {
   public readonly inputBucket: Bucket;
   public readonly outputBucket: Bucket;
 
-  constructor(scope: Construct, id: string, props: S3BucketProps) {
-    super(scope, `${id}-S3BucketConstruct`);
+  constructor(scope: Construct, id: string, props: S3Props) {
+    super(scope, id);
 
     // Create the input S3 bucket and enable EventBridge notification
     this.inputBucket = this.createBucket(props.inputBucketName, 'InputBucket');
@@ -39,17 +39,17 @@ export class S3Bucket extends Construct {
      */
   private createBucket(bucketName: string, id: string): Bucket {
     return new Bucket(this, id, {
-      bucketName: bucketName, // Set the bucket name
-      versioned: true, // Enable versioning for the bucket
-      encryption: BucketEncryption.S3_MANAGED, // Use S3-managed encryption for the bucket
-      lifecycleRules: [ // Define lifecycle rules for the bucket
+      bucketName: bucketName,
+      versioned: true,
+      encryption: BucketEncryption.S3_MANAGED,
+      lifecycleRules: [
         {
-          enabled: true, // Enable the rule
-          expiration: Duration.days(90), // Expire objects after 90 days
-          noncurrentVersionExpiration: Duration.days(30), // Expire non-current versions after 30 days
-          noncurrentVersionsToRetain: 2 // Retain 2 non-current versions
+          enabled: true,
+          expiration: Duration.days(90),
+          noncurrentVersionExpiration: Duration.days(30),
+          noncurrentVersionsToRetain: 2
         }
-      ],
+      ]
     });
   }
 }

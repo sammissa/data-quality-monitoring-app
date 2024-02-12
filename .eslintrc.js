@@ -2,7 +2,7 @@ module.exports = {
   'env': {
     'browser': true,
     'commonjs': true,
-    'es2021': true,
+    'es2021': true
   },
   'extends': [
     'eslint:recommended',
@@ -27,7 +27,8 @@ module.exports = {
     'sourceType': 'module'
   },
   'plugins': [
-    '@typescript-eslint'
+    '@typescript-eslint',
+    '@stylistic'
   ],
   'rules': {
     'indent': [
@@ -46,6 +47,18 @@ module.exports = {
       'error',
       'always'
     ],
-    '@typescript-eslint/no-var-requires': 'off'
+    'comma-spacing': [
+      'error',
+      {
+        before: false,
+        after: true
+      }
+    ],
+    'comma-dangle': [
+      'error',
+      'never'
+    ],
+    '@typescript-eslint/no-var-requires': 'off',
+    '@stylistic/object-curly-spacing': [ 'error', 'always' ]
   }
 };
