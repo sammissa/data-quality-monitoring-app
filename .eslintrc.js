@@ -1,10 +1,13 @@
 module.exports = {
   'env': {
-    'browser': true,
+    'node': true,
     'commonjs': true,
     'es2021': true,
     'jest': true
   },
+  'ignorePatterns': [
+      '*.d.ts'
+  ],
   'extends': [
     'eslint:recommended'
   ],
@@ -46,6 +49,9 @@ module.exports = {
     'semi': [
       'error',
       'always'
+    ],
+    'sort-imports': [
+        'error'
     ],
     'comma-spacing': [
       'error',

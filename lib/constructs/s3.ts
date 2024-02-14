@@ -1,5 +1,5 @@
-import { Construct } from 'constructs';
 import { Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
+import { Construct } from 'constructs';
 import { Duration } from 'aws-cdk-lib';
 
 /**
@@ -8,8 +8,8 @@ import { Duration } from 'aws-cdk-lib';
  * @param outputBucketName - Name of the output S3 bucket where content provider data quality results will be stored.
  */
 export interface S3Props {
-    readonly inputBucketName: string;
-    readonly outputBucketName: string;
+  readonly inputBucketName: string;
+  readonly outputBucketName: string;
 }
 
 /**
