@@ -23,6 +23,7 @@ export class Database extends Construct {
 
     this.databaseName = props.databaseName;
 
+    // Create the database
     new CfnDatabase(this, id, {
       catalogId: props.accountId,
       databaseInput: {

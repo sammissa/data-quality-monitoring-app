@@ -1,17 +1,22 @@
-// import * as cdk from 'aws-cdk-lib';
-// import { Template } from 'aws-cdk-lib/assertions';
-// import * as DataQualityMonitoringApp from '../lib/data-quality-monitoring-app-stack';
+import { App } from 'aws-cdk-lib';
+import { DataQualityMonitoringApp } from '../lib/data-quality-monitoring-app';
+import { Template } from 'aws-cdk-lib/assertions';
 
-// example test. To run these tests, uncomment this file along with the
-// example resource in lib/data-quality-monitoring-app-stack.ts
-test('SQS Queue Created', () => {
-//   const app = new cdk.App();
-//     // WHEN
-//   const stack = new DataQualityMonitoringApp.DataQualityMonitoringAppStack(app, 'MyTestStack');
-//     // THEN
-//   const template = Template.fromStack(stack);
+/**
+ * Unit tests for the {@link DataQualityMonitoringApp} class.
+ */
+describe('DataQualityMonitoringApp', () => {
+  test('creates the right number of resources', () => {
+    // Arrange
+    const app = new App();
 
-//   template.hasResourceProperties('AWS::SQS::Queue', {
-//     VisibilityTimeout: 300
-//   });
+    // Act
+    const dataQualityMonitoringApp = new DataQualityMonitoringApp(app, 'DataQualityMonitoringApp', {});
+    const template = Template.fromStack(dataQualityMonitoringApp);
+
+    // Assert
+    template.resourceCountIs('AWS::S3::Bucket', 2);
+    template.resourceCountIs('Custom::S3BucketNotifications', 1);
+    template.resourceCountIs('AWS::Glue::Database', 1);
+  });
 });
