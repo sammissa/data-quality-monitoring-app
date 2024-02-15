@@ -3,8 +3,9 @@ import { Construct } from 'constructs';
 
 /**
  * Properties for Database construct.
- * @param accountId - Aws Account ID of the stack.
- * @param databaseName - Name of the Glue Database
+ *
+ * @param {string} accountId - AWS Account ID of the stack
+ * @param {string} databaseName - Name of the Glue Database
  */
 export interface DatabaseProps {
   readonly accountId: string;
@@ -12,8 +13,11 @@ export interface DatabaseProps {
 }
 
 /**
- * Creates a Glue Database for executing Athena queries.
- * @property databaseName - Name of the Glue Database
+ * Construct to create an AWS Glue Database for executing Athena queries.
+ *
+ * @param {Construct} scope - Scope in which this construct is defined
+ * @param {string} id - ID of the construct
+ * @param {DatabaseProps} props - Properties of the construct
  */
 export class Database extends Construct {
   public readonly databaseName: string;
