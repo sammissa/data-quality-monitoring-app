@@ -5,7 +5,7 @@ import { CfnCrawler } from 'aws-cdk-lib/aws-glue';
 import { Construct } from 'constructs';
 
 /**
- * Properties for the Glue construct.
+ * Properties for Glue construct.
  *
  * @param {string} accountId - AWS Account ID of the stack
  * @param {string} region - AWS Region of the stack
@@ -36,6 +36,9 @@ export class Glue extends Construct {
   constructor(scope: Construct, id: string, props: GlueProps) {
     super(scope, id);
 
+    this.accountId = props.accountId;
+    this.region = props.region;
+
     const crawlerRole = new Role(this, 'Role', {
       assumedBy: new ServicePrincipal('glue.amazonaws.com')
     });
@@ -49,7 +52,6 @@ export class Glue extends Construct {
     );
     props.bucket.grantRead(crawlerRole, props.contentProviderPath + '/*');
 
-    const bucketName = props.bucket.bucketName;
     this.crawler = new CfnCrawler(this, 'Crawler', {
       name: `${props.contentProviderPath}-GlueCrawler`,
       role: crawlerRole.roleArn,
@@ -57,7 +59,7 @@ export class Glue extends Construct {
       targets: {
         s3Targets: [
           {
-            path: `s3://${bucketName}/${props.contentProviderPath}/`
+            path: `s3://${props.bucket.bucketName}/${props.contentProviderPath}/`
           }
         ]
       },
