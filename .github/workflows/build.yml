@@ -14,8 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: [18.x] #['8', '10', '12']
-        os: [ubuntu-latest] #[ubuntu-latest, windows-latest, macOS-latest]
+        node_version: 18.x
+        os: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -52,3 +52,41 @@ jobs:
         with:
           name: Cloudformation Template
           path: template.yaml
+
+  deploy:
+    name: Deploy on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: 18.x
+        os: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node_version }}
+
+      - name: Print Node.js Version
+        run: node --version
+
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm install aws-cdk -g
+
+      - name: Run build
+        run: npm run build --if-present
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy with AWS CDK
+        run: cdk deploy --require-approval never
