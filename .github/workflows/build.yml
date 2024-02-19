@@ -14,8 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: 18.x
-        os: ubuntu-latest
+        node_version: [ 18.x ]
+        os: [ ubuntu-latest ]
 
     steps:
       - uses: actions/checkout@v4
@@ -61,8 +61,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: 18.x
-        os: ubuntu-latest
+        node_version: [ 18.x ]
+        os: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node_version }}
