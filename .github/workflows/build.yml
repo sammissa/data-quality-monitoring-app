@@ -92,4 +92,4 @@ jobs:
           role-session-name: myGitHubActions
 
       - name: Deploy with AWS CDK
-        run: cdk deploy --require-approval never
+        run: cdk deploy --require-approval never --stack-name TestStack
