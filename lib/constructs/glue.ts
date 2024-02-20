@@ -9,7 +9,7 @@ import { Construct } from 'constructs';
  *
  * @param {string} accountId - AWS Account ID of the stack
  * @param {string} region - AWS Region of the stack
- * @param {string} stage - Stage prefix added to created resources
+ * @param {string} stage - Stage of the stack
  * @param {string} bucket - Input s3 bucket containing content provider data files
  * @param {string} contentProviderPath - Path to the content provider data files
  * @param {string} databaseName - Name of the Glue Database

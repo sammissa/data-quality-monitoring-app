@@ -7,11 +7,24 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { TaskInput } from 'aws-cdk-lib/aws-stepfunctions';
 
+/**
+ * Properties for Lambda construct.
+ *
+ * @param {string} contentProviderPath - Path to the content provider data files
+ * @param {string} stage - Stage of the stack
+ */
 export interface LambdaProps {
   readonly contentProviderPath: string;
   readonly stage: string;
 }
 
+/**
+ * Construct to create an AWS Lambda function and related resources.
+ *
+ * @param {Construct} scope - Scope in which this construct is defined
+ * @param {string} id - ID of the construct
+ * @param {LambdaProps} props - Properties of the construct
+ */
 export class Lambda extends Construct {
   private readonly lambdaFunction: NodejsFunction;
 
@@ -44,6 +57,12 @@ export class Lambda extends Construct {
     });
   }
 
+  /**
+   * Invokes the Lambda function in a Step Function task.
+   *
+   * @param {string} id - Logical ID for the task
+   * @returns {LambdaInvoke}
+   */
   public invoke(id: string): LambdaInvoke {
     return new LambdaInvoke(this, id, {
       lambdaFunction: this.lambdaFunction,

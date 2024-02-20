@@ -1,0 +1,12 @@
+{
+  "Message": "Test message: {}",
+  "Fields": [
+    "keyword"
+  ],
+  "SuccessTopicSubscriptions": [
+    "testsuccess@email.co.uk"
+  ],
+  "FailTopicSubscriptions": [
+    "testfail@email.co.uk"
+  ]
+}
