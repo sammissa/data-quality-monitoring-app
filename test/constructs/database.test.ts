@@ -8,13 +8,13 @@ import { Template } from 'aws-cdk-lib/assertions';
 describe('Database', () => {
   let template: Template;
 
-  beforeEach(() => {
+  beforeAll(() => {
     // Arrange
     const app = new App();
     const stack = new Stack(app, 'TestStack');
     const databaseProps = {
       accountId: stack.account,
-      stackPrefix: 'test_stack',
+      stackPrefix: 'test_stack'
     };
 
     // Act

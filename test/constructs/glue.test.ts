@@ -18,7 +18,7 @@ describe('Glue', () => {
   let glueConstruct: Glue;
   let template: Template;
 
-  beforeEach(() => {
+  beforeAll(() => {
     // Arrange
     const app = new App();
     stack = new Stack(app, 'TestStack');

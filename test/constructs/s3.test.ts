@@ -39,7 +39,7 @@ describe('S3', () => {
     ]
   };
 
-  beforeEach(() => {
+  beforeAll(() => {
     // Arrange
     const app = new App();
     const stack = new Stack(app, 'TestStack');
