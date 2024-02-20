@@ -32,6 +32,7 @@ describe('Glue', () => {
     const glueProps = {
       accountId: stack.account,
       region: stack.region,
+      stage: '',
       bucket: bucketMock,
       contentProviderPath: 'test-content-provider',
       databaseName: 'test-database'

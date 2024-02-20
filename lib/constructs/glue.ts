@@ -9,6 +9,7 @@ import { Construct } from 'constructs';
  *
  * @param {string} accountId - AWS Account ID of the stack
  * @param {string} region - AWS Region of the stack
+ * @param {string} stage - Stage prefix added to created resources
  * @param {string} bucket - Input s3 bucket containing content provider data files
  * @param {string} contentProviderPath - Path to the content provider data files
  * @param {string} databaseName - Name of the Glue Database
@@ -16,6 +17,7 @@ import { Construct } from 'constructs';
 export interface GlueProps {
   readonly accountId: string;
   readonly region: string;
+  readonly stage: string;
   readonly bucket: Bucket;
   readonly contentProviderPath: string;
   readonly databaseName: string;
@@ -53,7 +55,7 @@ export class Glue extends Construct {
     props.bucket.grantRead(crawlerRole, props.contentProviderPath + '/*');
 
     this.crawler = new CfnCrawler(this, 'Crawler', {
-      name: `${props.contentProviderPath}-GlueCrawler`,
+      name: `${props.contentProviderPath}-${props.stage}GlueCrawler`,
       role: crawlerRole.roleArn,
       databaseName: props.databaseName,
       targets: {

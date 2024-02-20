@@ -5,11 +5,11 @@ import { Construct } from 'constructs';
  * Properties for Database construct.
  *
  * @param {string} accountId - AWS Account ID of the stack
- * @param {string} databaseName - Name of the Glue Database
+ * @param {string} stackPrefix - Stage prefix added to created database
  */
 export interface DatabaseProps {
   readonly accountId: string;
-  readonly databaseName: string;
+  readonly stackPrefix: string;
 }
 
 /**
@@ -25,7 +25,7 @@ export class Database extends Construct {
   constructor(scope: Construct, id: string, props: DatabaseProps) {
     super(scope, id);
 
-    this.databaseName = props.databaseName;
+    this.databaseName = `${props.stackPrefix}_glue_database`;
 
     // Create the database
     new CfnDatabase(this, id, {

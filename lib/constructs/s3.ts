@@ -1,16 +1,14 @@
 import { Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
+import { Duration, RemovalPolicy } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { Duration } from 'aws-cdk-lib';
 
 /**
  * Properties for S3 construct.
  *
- * @param {string} inputBucketName - Name of the input s3 bucket containing content provider data files
- * @param {string} outputBucketName - Name of the output s3 bucket where content provider data quality results will be stored
+ * @param {string} stackPrefix - Stack prefix added to created s3 buckets
  */
 export interface S3Props {
-  readonly inputBucketName: string;
-  readonly outputBucketName: string;
+  readonly stackPrefix: string;
 }
 
 /**
@@ -27,10 +25,10 @@ export class S3 extends Construct {
   constructor(scope: Construct, id: string, props: S3Props) {
     super(scope, id);
 
-    this.inputBucket = this.createBucket(props.inputBucketName, 'InputBucket');
+    this.inputBucket = this.createBucket(`${props.stackPrefix}-s3-input-bucket`, 'InputBucket');
     this.inputBucket.enableEventBridgeNotification();
 
-    this.outputBucket = this.createBucket(props.outputBucketName, 'OutputBucket');
+    this.outputBucket = this.createBucket(`${props.stackPrefix}-s3-output-bucket`, 'OutputBucket');
   }
 
   /**
@@ -50,7 +48,9 @@ export class S3 extends Construct {
           noncurrentVersionExpiration: Duration.days(30),
           noncurrentVersionsToRetain: 2
         }
-      ]
+      ],
+      removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteObjects: true
     });
   }
 }

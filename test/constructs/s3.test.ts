@@ -30,7 +30,13 @@ describe('S3', () => {
           }
         }
       ]
-    }
+    },
+    Tags: [
+      {
+        Key: 'aws-cdk:auto-delete-objects',
+        Value: 'true'
+      }
+    ]
   };
 
   beforeEach(() => {
@@ -38,8 +44,7 @@ describe('S3', () => {
     const app = new App();
     const stack = new Stack(app, 'TestStack');
     const s3BucketConstructProps = {
-      inputBucketName: 'test-input-bucket',
-      outputBucketName: 'test-output-bucket'
+      stackPrefix: 'test-stack'
     };
 
     // Act
@@ -55,7 +60,7 @@ describe('S3', () => {
 
   test('creates an input S3 bucket with the correct properties', () => {
     const expectedInputBucketProps = {
-      BucketName: 'test-input-bucket',
+      BucketName: 'test-stack-s3-input-bucket',
       ...defaultS3BucketProps
     };
 
@@ -65,7 +70,7 @@ describe('S3', () => {
 
   test('creates an output S3 bucket with the correct properties', () => {
     const expectedOutputBucketProps = {
-      BucketName: 'test-output-bucket',
+      BucketName: 'test-stack-s3-output-bucket',
       ...defaultS3BucketProps
     };
 

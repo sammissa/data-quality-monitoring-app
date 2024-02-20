@@ -1,17 +1,17 @@
 import { App } from 'aws-cdk-lib';
-import { DataQualityMonitoringApp } from '../lib/data-quality-monitoring-app';
+import { DataQualityMonitoringAppStack } from '../lib';
 import { Template } from 'aws-cdk-lib/assertions';
 
 /**
- * Unit tests for the {@link DataQualityMonitoringApp} class.
+ * Unit tests for the {@link DataQualityMonitoringAppStack} class.
  */
-describe('DataQualityMonitoringApp', () => {
+describe('DataQualityMonitoringAppStack', () => {
   test('creates the right number of resources', () => {
     // Arrange
     const app = new App();
 
     // Act
-    const dataQualityMonitoringApp = new DataQualityMonitoringApp(app, 'DataQualityMonitoringApp', {});
+    const dataQualityMonitoringApp = new DataQualityMonitoringAppStack(app, 'TestDataQualityMonitoringAppStack', {});
     const template = Template.fromStack(dataQualityMonitoringApp);
 
     // Assert

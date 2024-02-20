@@ -14,7 +14,7 @@ describe('Database', () => {
     const stack = new Stack(app, 'TestStack');
     const databaseProps = {
       accountId: stack.account,
-      databaseName: 'test_database'
+      stackPrefix: 'test_stack',
     };
 
     // Act
@@ -33,7 +33,7 @@ describe('Database', () => {
         Ref: 'AWS::AccountId'
       },
       DatabaseInput: {
-        Name: 'test_database',
+        Name: 'test_stack_glue_database',
         Description: 'Glue Database for executing Athena queries',
         CreateTableDefaultPermissions: [
           {
