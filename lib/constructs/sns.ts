@@ -1,6 +1,7 @@
 import { JsonPath, TaskInput } from 'aws-cdk-lib/aws-stepfunctions';
 import { Subscription, SubscriptionProtocol, Topic } from 'aws-cdk-lib/aws-sns';
 import { Construct } from 'constructs';
+import { ResultPath } from '../constants';
 import { SnsPublish } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { readFileSync } from 'fs';
 
@@ -35,7 +36,7 @@ export class SNS extends Construct {
 
     const snsConfig = JSON.parse(readFileSync(`./resources/${this.contentProviderPath}/sns-config.json`, 'utf-8'));
     const { Message, Fields, FailTopicSubscriptions, SuccessTopicSubscriptions } = snsConfig;
-    const processedFields = Fields.map((field: string) => JsonPath.stringAt(`$.Payload.results.${field}`));
+    const processedFields = Fields.map((field: string) => JsonPath.stringAt(`${ResultPath.LAMBDA_INVOKE}.results.${field}`));
     this.message = JsonPath.format(Message, ...processedFields);
 
     this.successSNSTopic = this.createTopic('SuccessTopic', props.stage);
@@ -75,7 +76,13 @@ export class SNS extends Construct {
     return new SnsPublish(this, id, {
       topic: topic,
       subject: subject,
-      message: TaskInput.fromText(this.message)
+      message: TaskInput.fromText(this.message),
+      resultSelector: {
+        'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
+        subject: subject
+      },
+      resultPath: ResultPath.SNS_PUBLISH_TOPIC,
+      outputPath: ResultPath.RESULTS
     });
   }
 

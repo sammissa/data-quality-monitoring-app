@@ -1,5 +1,6 @@
 import { App, Stack } from 'aws-cdk-lib';
 import { Lambda } from '../../lib/constructs/lambda';
+import { ResultPath } from '../../lib/constants';
 import { Template } from 'aws-cdk-lib/assertions';
 
 /**
@@ -105,9 +106,13 @@ describe('Lambda', () => {
           ]
         },
         Payload: {
-          'ResultSet.$': '$.ResultSet',
-          'ObjectKey.$': '$$.Execution.Input.detail.object.key'
+          'ResultSet.$': `${ResultPath.ATHENA_GET_QUERY_RESULTS}.resultSet`,
+          'ObjectKey.$': `${ResultPath.EXECUTION_INPUT}.key`
         }
+      },
+      ResultPath: ResultPath.LAMBDA_INVOKE,
+      ResultSelector: {
+        'results.$': '$.Payload.results'
       },
       Retry: [
         {

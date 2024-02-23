@@ -5,7 +5,7 @@ import { Construct } from 'constructs';
  * Properties for Database construct.
  *
  * @param {string} accountId - AWS Account ID of the stack
- * @param {string} stackPrefix - Stage prefix added to created database
+ * @param {string} stackPrefix - Stack prefix added to created database
  */
 export interface DatabaseProps {
   readonly accountId: string;

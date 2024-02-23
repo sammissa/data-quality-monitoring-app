@@ -1,7 +1,7 @@
+import { CfnClassifier, CfnCrawler } from 'aws-cdk-lib/aws-glue';
 import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { CallAwsService } from 'aws-cdk-lib/aws-stepfunctions-tasks';
-import { CfnCrawler } from 'aws-cdk-lib/aws-glue';
 import { Construct } from 'constructs';
 
 /**
@@ -54,6 +54,18 @@ export class Glue extends Construct {
     );
     props.bucket.grantRead(crawlerRole, props.contentProviderPath + '/*');
 
+    const classifierName = `${props.contentProviderPath}-${props.stage}GlueClassifier`;
+    new CfnClassifier(this, 'Classifier', {
+      csvClassifier: {
+        allowSingleColumn: false,
+        containsHeader: 'PRESENT',
+        delimiter: ',',
+        disableValueTrimming: true,
+        name: classifierName,
+        quoteSymbol: '"'
+      }
+    });
+
     this.crawler = new CfnCrawler(this, 'Crawler', {
       name: `${props.contentProviderPath}-${props.stage}GlueCrawler`,
       role: crawlerRole.roleArn,
@@ -66,18 +78,22 @@ export class Glue extends Construct {
         ]
       },
       schemaChangePolicy: {
-        deleteBehavior: 'DELETE_FROM_DATABASE', //'LOG',
-        updateBehavior: 'UPDATE_IN_DATABASE' //'LOG'
+        deleteBehavior: 'LOG', //'DELETE_FROM_DATABASE'
+        updateBehavior: 'LOG' //'UPDATE_IN_DATABASE'
       },
       recrawlPolicy: {
-        recrawlBehavior: 'CRAWL_EVERYTHING' //'CRAWL_NEW_FOLDERS_ONLY'
+        recrawlBehavior: 'CRAWL_NEW_FOLDERS_ONLY' //'CRAWL_EVERYTHING'
       },
+      classifiers: [ classifierName ],
       configuration: JSON.stringify({
         Version: 1,
         CrawlerOutput: {
           Partitions: {
             AddOrUpdateBehavior: 'InheritFromTable'
           }
+        },
+        Grouping: {
+          TableGroupingPolicy: 'CombineCompatibleSchemas'
         }
       })
     });

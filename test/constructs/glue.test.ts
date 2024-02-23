@@ -46,21 +46,25 @@ describe('Glue', () => {
   test('creates the right number of resources', () => {
     // Assert
     template.resourceCountIs('AWS::Glue::Crawler', 1);
+    template.resourceCountIs('AWS::Glue::Classifier', 1);
     template.resourceCountIs('AWS::IAM::Policy', 1);
     template.resourceCountIs('AWS::IAM::Role', 1);
   });
 
   test('creates a glue crawler with the correct properties', () => {
     const expectedGlueCrawlerProps = {
-      Configuration: '{"Version":1,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}}}',
+      Classifiers: [
+        'test-content-provider-GlueClassifier'
+      ],
+      Configuration: '{"Version":1,"CrawlerOutput":{"Partitions":{"AddOrUpdateBehavior":"InheritFromTable"}},"Grouping":{"TableGroupingPolicy":"CombineCompatibleSchemas"}}',
       DatabaseName: 'test-database',
       Name: 'test-content-provider-GlueCrawler',
       RecrawlPolicy: {
-        RecrawlBehavior: 'CRAWL_EVERYTHING'
+        RecrawlBehavior: 'CRAWL_NEW_FOLDERS_ONLY' //'CRAWL_EVERYTHING'
       },
       SchemaChangePolicy: {
-        DeleteBehavior: 'DELETE_FROM_DATABASE',
-        UpdateBehavior: 'UPDATE_IN_DATABASE'
+        DeleteBehavior: 'LOG', // 'DELETE_FROM_DATABASE',
+        UpdateBehavior: 'LOG' // 'UPDATE_IN_DATABASE'
       },
       Targets: {
         S3Targets: [
@@ -73,6 +77,22 @@ describe('Glue', () => {
 
     // Assert
     template.hasResourceProperties('AWS::Glue::Crawler', expectedGlueCrawlerProps);
+  });
+
+  test('creates a glue classifier with the correct properties', () => {
+    const expectedGlueCrawlerProps = {
+      CsvClassifier: {
+        AllowSingleColumn: false,
+        ContainsHeader: 'PRESENT',
+        Delimiter: ',',
+        DisableValueTrimming: true,
+        Name: 'test-content-provider-GlueClassifier',
+        QuoteSymbol: '"'
+      }
+    };
+
+    // Assert
+    template.hasResourceProperties('AWS::Glue::Classifier', expectedGlueCrawlerProps);
   });
 
   test('creates a iam role with the correct properties', () => {

@@ -4,6 +4,7 @@ import { Construct } from 'constructs';
 import { LambdaInvoke } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { LogGroup } from 'aws-cdk-lib/aws-logs';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
+import { ResultPath } from '../constants';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import { TaskInput } from 'aws-cdk-lib/aws-stepfunctions';
 
@@ -68,9 +69,13 @@ export class Lambda extends Construct {
       lambdaFunction: this.lambdaFunction,
       payload: TaskInput.fromObject(
         {
-          'ResultSet.$': '$.ResultSet',
-          'ObjectKey.$': '$$.Execution.Input.detail.object.key'
-        })
+          'ResultSet.$': `${ResultPath.ATHENA_GET_QUERY_RESULTS}.resultSet`,
+          'ObjectKey.$': `${ResultPath.EXECUTION_INPUT}.key`
+        }),
+      resultSelector: {
+        'results.$': '$.Payload.results'
+      },
+      resultPath: ResultPath.LAMBDA_INVOKE
     });
   }
 }

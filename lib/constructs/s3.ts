@@ -1,5 +1,6 @@
 import { Bucket, BucketEncryption } from 'aws-cdk-lib/aws-s3';
 import { Duration, RemovalPolicy } from 'aws-cdk-lib';
+import { BucketNameSuffix } from '../constants';
 import { Construct } from 'constructs';
 
 /**
@@ -25,10 +26,10 @@ export class S3 extends Construct {
   constructor(scope: Construct, id: string, props: S3Props) {
     super(scope, id);
 
-    this.inputBucket = this.createBucket(`${props.stackPrefix}-s3-input-bucket`, 'InputBucket');
+    this.inputBucket = this.createBucket(props.stackPrefix + BucketNameSuffix.INPUT, 'InputBucket');
     this.inputBucket.enableEventBridgeNotification();
 
-    this.outputBucket = this.createBucket(`${props.stackPrefix}-s3-output-bucket`, 'OutputBucket');
+    this.outputBucket = this.createBucket(props.stackPrefix + BucketNameSuffix.OUTPUT, 'OutputBucket');
   }
 
   /**

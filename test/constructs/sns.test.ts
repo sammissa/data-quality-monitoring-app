@@ -1,4 +1,5 @@
 import { App, Stack } from 'aws-cdk-lib';
+import { ResultPath } from '../../lib/constants';
 import { SNS } from '../../lib/constructs/sns';
 import { Template } from 'aws-cdk-lib/assertions';
 
@@ -23,7 +24,6 @@ describe('SNS', () => {
     // Act
     snsConstruct = new SNS(stack, 'TestSNS', snsProps);
     template = Template.fromStack(stack);
-    console.log(template.toJSON());
   });
 
   test('creates the right number of resources', () => {
@@ -55,6 +55,7 @@ describe('SNS', () => {
   });
 
   test('publishSuccessTopic returns a sns publish task with the correct task definition', () => {
+    const subject = 'Data quality monitoring job for test-content-provider succeeded.';
     const expectedTaskProps = {
       End: true,
       Type: 'Task',
@@ -70,12 +71,18 @@ describe('SNS', () => {
           ]
         ]
       },
+      OutputPath: ResultPath.RESULTS,
+      ResultPath: ResultPath.SNS_PUBLISH_TOPIC,
+      ResultSelector: {
+        'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
+        subject: subject
+      },
       Parameters: {
         TopicArn: {
           Ref: 'TestSNSSuccessTopic60B837CE'
         },
-        'Message.$': 'States.Format(\'Test message: {}\', $.Payload.results.keyword)',
-        Subject: 'Data quality monitoring job for test-content-provider succeeded.'
+        'Message.$': `States.Format(Test message: {}, ${ResultPath.LAMBDA_INVOKE}.results.keyword)`,
+        Subject: subject
       }
     };
 
@@ -85,6 +92,7 @@ describe('SNS', () => {
   });
 
   test('publishFailTopic returns a sns publish task with the correct task definition', () => {
+    const subject = 'Data quality monitoring job for test-content-provider failed.';
     const expectedTaskProps = {
       End: true,
       Type: 'Task',
@@ -100,12 +108,18 @@ describe('SNS', () => {
           ]
         ]
       },
+      OutputPath: ResultPath.RESULTS,
+      ResultPath: ResultPath.SNS_PUBLISH_TOPIC,
+      ResultSelector: {
+        'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
+        subject: subject
+      },
       Parameters: {
         TopicArn: {
           Ref: 'TestSNSFailTopic2F91633A'
         },
-        'Message.$': 'States.Format(\'Test message: {}\', $.Payload.results.keyword)',
-        Subject: 'Data quality monitoring job for test-content-provider failed.'
+        'Message.$': `States.Format(Test message: {}, ${ResultPath.LAMBDA_INVOKE}.results.keyword)`,
+        Subject: subject
       }
     };
 

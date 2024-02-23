@@ -64,7 +64,7 @@ module.exports = {
       'error',
       'never'
     ],
-    '@typescript-eslint/no-var-requires': 'off',
+    'no-unused-vars': 'off',
     '@stylistic/object-curly-spacing': [ 'error', 'always' ]
   }
 };
