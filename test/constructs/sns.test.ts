@@ -81,7 +81,7 @@ describe('SNS', () => {
         TopicArn: {
           Ref: 'TestSNSSuccessTopic60B837CE'
         },
-        'Message.$': `States.Format(Test message: {}, ${ResultPath.LAMBDA_INVOKE}.results.keyword)`,
+        'Message.$': 'States.Format(\'Test message: {}\', $.results.lambdaInvoke.results.keyword)',
         Subject: subject
       }
     };
@@ -118,7 +118,7 @@ describe('SNS', () => {
         TopicArn: {
           Ref: 'TestSNSFailTopic2F91633A'
         },
-        'Message.$': `States.Format(Test message: {}, ${ResultPath.LAMBDA_INVOKE}.results.keyword)`,
+        'Message.$': 'States.Format(\'Test message: {}\', $.results.lambdaInvoke.results.keyword)',
         Subject: subject
       }
     };
