@@ -1,0 +1,13 @@
+{
+  "Message": "Total Keywords: {}.\nValid Keywords with 4 or more Q and A pairs: {}.\nInvalid Keywords with less than 4 Q and A pairs: {}.\nValid-to-Invalid Keyword Ratio: {}.",
+  "Fields": [
+    "total_keywords",
+    "keywords_with_valid_qa_pairs",
+    "keywords_with_invalid_qa_pairs",
+    "pass_percentage"
+  ],
+  "SuccessTopicSubscriptions": [
+  ],
+  "FailTopicSubscriptions": [
+  ]
+}

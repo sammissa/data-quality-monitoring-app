@@ -55,6 +55,7 @@ export class Glue extends Construct {
     );
     props.bucket.grantRead(crawlerRole, props.contentProviderPath + '/*');
 
+    // TODO - Add support for json/parquet files
     const classifierName = `${props.contentProviderPath}-${props.stage}GlueClassifier`;
     new CfnClassifier(this, 'Classifier', {
       csvClassifier: {

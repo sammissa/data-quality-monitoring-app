@@ -79,21 +79,21 @@ describe('ContentProvider', () => {
     });
 
     const definitionJsonString = JSON.stringify(definitionString.asObject());
-    expect(definitionJsonString).toMatch(/"StartAt\\":\\"Glue Task - Start Glue Crawler\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"Glue Task - Get Glue Crawler\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"State Choice - Check Glue Crawler\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"State Wait - Wait for Glue Crawler\\"/);
+    expect(definitionJsonString).toMatch(/"StartAt\\":\\"Start Glue Crawler\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Get Glue Crawler\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Check Glue Crawler\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Wait for Glue Crawler\\"/);
 
-    expect(definitionJsonString).toMatch(/"Default\\":\\"Athena Pass - Get Execution Parameters\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"Athena Task - Start Query Execution\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"Athena Task - Get Query Results\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"Lambda Task - Process Query Results\\"/);
-    expect(definitionJsonString).toMatch(/"Next\\":\\"State Choice - Check Query Results\\"/);
+    expect(definitionJsonString).toMatch(/"Default\\":\\"Get Execution Parameters\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Start Query Execution\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Get Query Results\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Process Query Results\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Check Query Results\\"/);
 
-    expect(definitionJsonString).toMatch(/"Next\\":\\"SNS Task - Publish Success Topic\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Publish Success Topic\\"/);
     expect(definitionJsonString).toMatch(/"Next\\":\\"Success\\"/);
 
-    expect(definitionJsonString).toMatch(/"Default\\":\\"SNS Task - Publish Fail Topic\\"/);
+    expect(definitionJsonString).toMatch(/"Default\\":\\"Publish Fail Topic\\"/);
     expect(definitionJsonString).toMatch(/"Next\\":\\"Fail\\"/);
   });
 });

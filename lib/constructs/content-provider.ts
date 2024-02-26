@@ -100,7 +100,7 @@ export class ContentProvider extends Construct {
   }
 
   private getSuccessTaskChain(): Chain {
-    const publishSuccessTopicTask = this.snsConstruct.publishSuccessTopic('SNS Task - Publish Success Topic');
+    const publishSuccessTopicTask = this.snsConstruct.publishSuccessTopic('Publish Success Topic');
     const success = new Succeed(this, 'Success');
 
     return Chain.start(publishSuccessTopicTask)
@@ -108,7 +108,7 @@ export class ContentProvider extends Construct {
   }
 
   private getFailTaskChain(): Chain {
-    const publishFailTopicTask = this.snsConstruct.publishFailTopic('SNS Task - Publish Fail Topic');
+    const publishFailTopicTask = this.snsConstruct.publishFailTopic('Publish Fail Topic');
     const fail = new Fail(this, 'Fail', {
       error: 'Query failed'
     });
@@ -118,12 +118,12 @@ export class ContentProvider extends Construct {
   }
 
   private getQueryTaskChain(): Chain {
-    const getExecutionParameters = this.athenaConstruct.getExecutionParameters('Athena Pass - Get Execution Parameters');
-    const startQueryExecution = this.athenaConstruct.startQueryExecution('Athena Task - Start Query Execution');
-    const getQueryResults = this.athenaConstruct.getQueryResults('Athena Task - Get Query Results');
-    const processQueryResults = this.lambdaConstruct.invoke('Lambda Task - Process Query Results');
+    const getExecutionParameters = this.athenaConstruct.getExecutionParameters('Get Execution Parameters');
+    const startQueryExecution = this.athenaConstruct.startQueryExecution('Start Query Execution');
+    const getQueryResults = this.athenaConstruct.getQueryResults('Get Query Results');
+    const processQueryResults = this.lambdaConstruct.invoke('Process Query Results');
 
-    const checkQueryResults = new Choice(this, 'State Choice - Check Query Results')
+    const checkQueryResults = new Choice(this, 'Check Query Results')
       .when(Condition.booleanEquals(`${ResultPath.LAMBDA}.results.success`, true), this.getSuccessTaskChain())
       .otherwise(this.getFailTaskChain());
 
@@ -135,17 +135,17 @@ export class ContentProvider extends Construct {
   }
 
   private getDefinitionBodyChain(): Chain {
-    const startGlueCrawler = this.glueConstruct.callService('Glue Task - Start Glue Crawler', 'startCrawler', 'glue:StartCrawler');
-    const getGlueCrawler = this.glueConstruct.callService('Glue Task - Get Glue Crawler', 'getCrawler', 'glue:GetCrawler');
+    const startGlueCrawler = this.glueConstruct.callService('Start Glue Crawler', 'startCrawler', 'glue:StartCrawler');
+    const getGlueCrawler = this.glueConstruct.callService('Get Glue Crawler', 'getCrawler', 'glue:GetCrawler');
 
-    const wait = new Wait(this, 'State Wait - Wait for Glue Crawler', {
+    const wait = new Wait(this, 'Wait for Glue Crawler', {
       time: WaitTime.duration(Duration.seconds(30))
     });
-    const waitTaskChain = Chain.start(wait)
+    const waitChain = Chain.start(wait)
       .next(getGlueCrawler);
 
-    const checkGlueCrawler = new Choice(this, 'State Choice - Check Glue Crawler')
-      .when(Condition.stringEquals(`${ResultPath.GLUE}.Crawler.State`, 'RUNNING'), waitTaskChain)
+    const checkGlueCrawler = new Choice(this, 'Check Glue Crawler')
+      .when(Condition.stringEquals(`${ResultPath.GLUE}.Crawler.State`, 'RUNNING'), waitChain)
       .otherwise(this.getQueryTaskChain());
 
     return Chain.start(startGlueCrawler)
