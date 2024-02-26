@@ -17,7 +17,7 @@ export interface SNSProps {
 }
 
 /**
- * Construct to create SNS topics, subscriptions, and related resources.
+ * Construct to create AWS SNS topics, subscriptions, and related resources.
  *
  * @param {Construct} scope - Scope in which this construct is defined
  * @param {string} id - ID of the construct

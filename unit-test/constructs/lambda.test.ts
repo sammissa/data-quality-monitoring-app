@@ -42,7 +42,7 @@ describe('Lambda', () => {
         }
       },
       FunctionName: 'test-content-provider-LambdaFunction',
-      Handler: 'processQueryResults.handler',
+      Handler: 'index.processQueryResultsHandler',
       Runtime: 'nodejs18.x',
       Timeout: 30
     };

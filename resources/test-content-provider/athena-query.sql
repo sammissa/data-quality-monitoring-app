@@ -1,0 +1,1 @@
+SELECT keyword FROM ${DATABASE}.${TABLE} WHERE partition_0 = ?
