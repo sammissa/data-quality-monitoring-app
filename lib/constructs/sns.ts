@@ -36,7 +36,7 @@ export class SNS extends Construct {
 
     const snsConfig = JSON.parse(readFileSync(`./resources/${this.contentProviderPath}/sns-config.json`, 'utf-8'));
     const { Message, Fields, FailTopicSubscriptions, SuccessTopicSubscriptions } = snsConfig;
-    const processedFields = Fields.map((field: string) => JsonPath.stringAt(`${ResultPath.LAMBDA_INVOKE}.results.${field}`));
+    const processedFields = Fields.map((field: string) => JsonPath.stringAt(`${ResultPath.LAMBDA}.results.${field}`));
     this.message = JsonPath.format(Message, ...processedFields);
 
     this.successSNSTopic = this.createTopic('SuccessTopic', props.stage);
@@ -81,7 +81,7 @@ export class SNS extends Construct {
         'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
         subject: subject
       },
-      resultPath: ResultPath.SNS_PUBLISH_TOPIC,
+      resultPath: ResultPath.SNS,
       outputPath: ResultPath.RESULTS
     });
   }

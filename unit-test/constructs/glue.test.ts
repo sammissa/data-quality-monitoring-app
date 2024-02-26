@@ -3,6 +3,7 @@ import { Grant, Role } from 'aws-cdk-lib/aws-iam';
 import { anyOfClass, anyString, instance, mock, when } from 'ts-mockito';
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { Glue } from '../../lib/constructs/glue';
+import { ResultPath } from '../../lib/constants';
 import { Template } from 'aws-cdk-lib/assertions';
 
 /**
@@ -165,12 +166,13 @@ describe('Glue', () => {
           ]
         ]
       },
-      Type: 'Task'
+      Type: 'Task',
+      ResultPath: ResultPath.GLUE
     };
 
-    const callGlueServiceTask = glueConstruct.callGlueService('TestCallGlueService', 'startCrawler', 'glue:StartCrawler');
+    const callServiceTask = glueConstruct.callService('TestCallGlueService', 'startCrawler', 'glue:StartCrawler');
 
     // Assert
-    expect(stack.resolve(callGlueServiceTask.toStateJson())).toEqual(expectedTaskProps);
+    expect(stack.resolve(callServiceTask.toStateJson())).toEqual(expectedTaskProps);
   });
 });

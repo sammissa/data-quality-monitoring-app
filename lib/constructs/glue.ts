@@ -3,6 +3,7 @@ import { Effect, ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from '
 import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { CallAwsService } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { Construct } from 'constructs';
+import { ResultPath } from '../constants';
 
 /**
  * Properties for Glue construct.
@@ -107,7 +108,7 @@ export class Glue extends Construct {
    * @param {string} iamAction - The IAM permission needed
    * @returns {CallAwsService}
    */
-  public callGlueService(id: string, action: string, iamAction: string): CallAwsService {
+  public callService(id: string, action: string, iamAction: string): CallAwsService {
     return new CallAwsService(this, id, {
       service: 'glue',
       action: action,
@@ -115,7 +116,8 @@ export class Glue extends Construct {
       iamResources: [
         `arn:aws:glue:${this.region}:${this.accountId}:crawler/${this.crawler.name}`
       ],
-      iamAction: iamAction
+      iamAction: iamAction,
+      resultPath: ResultPath.GLUE
     });
   }
 }

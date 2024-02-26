@@ -72,7 +72,7 @@ describe('SNS', () => {
         ]
       },
       OutputPath: ResultPath.RESULTS,
-      ResultPath: ResultPath.SNS_PUBLISH_TOPIC,
+      ResultPath: ResultPath.SNS,
       ResultSelector: {
         'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
         subject: subject
@@ -81,7 +81,7 @@ describe('SNS', () => {
         TopicArn: {
           Ref: 'TestSNSSuccessTopic60B837CE'
         },
-        'Message.$': 'States.Format(\'Test message: {}\', $.results.lambdaInvoke.results.keyword)',
+        'Message.$': 'States.Format(\'Test message: {}\', $.results.lambda.results.keyword)',
         Subject: subject
       }
     };
@@ -109,7 +109,7 @@ describe('SNS', () => {
         ]
       },
       OutputPath: ResultPath.RESULTS,
-      ResultPath: ResultPath.SNS_PUBLISH_TOPIC,
+      ResultPath: ResultPath.SNS,
       ResultSelector: {
         'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
         subject: subject
@@ -118,7 +118,7 @@ describe('SNS', () => {
         TopicArn: {
           Ref: 'TestSNSFailTopic2F91633A'
         },
-        'Message.$': 'States.Format(\'Test message: {}\', $.results.lambdaInvoke.results.keyword)',
+        'Message.$': 'States.Format(\'Test message: {}\', $.results.lambda.results.keyword)',
         Subject: subject
       }
     };

@@ -1,5 +1,5 @@
 import { Logger } from '@aws-lambda-powertools/logger';
-import { handler } from '../../lib/functions/process-query-results';
+import { processQueryResultsHandler } from '../../lib/functions/index';
 
 /**
  * Unit tests for process-query-results {@link handler} function.
@@ -13,7 +13,7 @@ describe('handler', () => {
 
   test('handles valid input', async () => {
     const event = {
-      ResultSet: {
+      resultSet: {
         ResultSetMetadata: {
           ColumnInfo: [
             { Name: 'col1', Type: 'bigint' },
@@ -27,10 +27,10 @@ describe('handler', () => {
           { Data: [{ VarCharValue: '2' }, { VarCharValue: '6.28' }, { VarCharValue: 'false' }, { VarCharValue: 'test' }] }
         ]
       },
-      ObjectKey: 'test-object-key'
+      queryExecutionId: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     };
 
-    const result = await handler(event);
+    const result = await processQueryResultsHandler(event);
 
     expect(result.results).toEqual({
       col1: 2,
@@ -39,37 +39,37 @@ describe('handler', () => {
       col4: 'test'
     });
     expect(Logger.prototype.info).toHaveBeenCalledTimes(2);
-    expect(Logger.prototype.info).toHaveBeenCalledWith(`Starting to process query results from: ${event.ObjectKey}`);
-    expect(Logger.prototype.info).toHaveBeenCalledWith(`Finished processing query results from: ${event.ObjectKey}`);
+    expect(Logger.prototype.info).toHaveBeenCalledWith(`Starting to process results from query execution id: ${event.queryExecutionId}`);
+    expect(Logger.prototype.info).toHaveBeenCalledWith(`Finished processing results from query execution id: ${event.queryExecutionId}`);
   });
 
   test('handles empty result set data', async () => {
     const event = {
-      ResultSet: {
+      resultSet: {
         ResultSetMetadata: {
           ColumnInfo: []
         },
         Rows: []
       },
-      ObjectKey: 'test-object-key'
+      queryExecutionId: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     };
-    const result = await handler(event);
+    const result = await processQueryResultsHandler(event);
 
     expect(result.results).toEqual({});
     expect(Logger.prototype.error).toHaveBeenCalledTimes(1);
-    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: ResultSet is empty or does not have enough rows');
+    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: Result set is empty or does not have enough rows');
   });
 
   test('handles missing column info', async () => {
     const event = {
-      ResultSet: {
+      resultSet: {
         ResultSetMetadata: null,
         Rows: []
       },
-      ObjectKey: 'test-object-key'
+      queryExecutionId: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     };
 
-    const result = await handler(event);
+    const result = await processQueryResultsHandler(event);
 
     expect(result.results).toEqual({});
     expect(Logger.prototype.error).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe('handler', () => {
 
   test('handles invalid result set data', async () => {
     const event = {
-      ResultSet: {
+      resultSet: {
         ResultSetMetadata: {
           ColumnInfo: [
             { Name: 'col1', Type: 'bigint' },
@@ -92,18 +92,18 @@ describe('handler', () => {
           { Data: [{ VarCharValue: '4' }, { VarCharValue: '8' }, { VarCharValue: 'true' }, { VarCharValue: 'value' }] }
         ]
       },
-      ObjectKey: 'test-object-key'
+      queryExecutionId: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     };
 
-    const result = await handler(event);
+    const result = await processQueryResultsHandler(event);
 
     expect(result.results).toEqual({});
     expect(Logger.prototype.error).toHaveBeenCalledTimes(1);
-    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: ResultSet should have 2 rows but it has 3 rows');
+    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: Result set should have 2 rows but it has 3 rows');
   });
 
   test('handles null event', async () => {
-    const result = await handler(null);
+    const result = await processQueryResultsHandler(null);
 
     expect(result.results).toEqual({});
     expect(Logger.prototype.error).toHaveBeenCalledTimes(1);
@@ -111,20 +111,20 @@ describe('handler', () => {
   });
 
   test('handles missing result set data', async () => {
-    const result = await handler({
-      ObjectKey: 'test-object-key'
+    const result = await processQueryResultsHandler({
+      queryExecutionId: 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
     });
 
     expect(result.results).toEqual({});
     expect(Logger.prototype.error).toHaveBeenCalledTimes(1);
-    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: No ObjectKey or ResultSet found in event');
+    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: No query execution id or result set found in event');
   });
 
-  test('handles missing object key', async () => {
-    const result = await handler({});
+  test('handles missing query execution id', async () => {
+    const result = await processQueryResultsHandler({});
 
     expect(result.results).toEqual({});
     expect(Logger.prototype.error).toHaveBeenCalledTimes(1);
-    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: No ObjectKey or ResultSet found in event');
+    expect(Logger.prototype.error).toHaveBeenCalledWith('Error: No query execution id or result set found in event');
   });
 });

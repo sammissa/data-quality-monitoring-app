@@ -45,8 +45,8 @@ export class Lambda extends Construct {
 
     this.lambdaFunction = new NodejsFunction(this, id, {
       functionName: `${props.contentProviderPath}-${props.stage}LambdaFunction`,
-      entry: './lib/functions/process-query-results/index.ts',
-      handler: 'handler',
+      entry: './lib/functions/index.ts',
+      handler: 'processQueryResultsHandler',
       runtime: Runtime.NODEJS_18_X,
       role: lambdaRole,
       timeout: Duration.seconds(30),
@@ -69,13 +69,13 @@ export class Lambda extends Construct {
       lambdaFunction: this.lambdaFunction,
       payload: TaskInput.fromObject(
         {
-          'ResultSet.$': `${ResultPath.ATHENA_GET_QUERY_RESULTS}.resultSet`,
-          'ObjectKey.$': `${ResultPath.EXECUTION_INPUT}.key`
+          'queryExecutionId.$':`${ResultPath.ATHENA}.startQueryExecution.queryExecutionId`,
+          'resultSet.$': `${ResultPath.ATHENA}.getQueryResults.resultSet`
         }),
       resultSelector: {
         'results.$': '$.Payload.results'
       },
-      resultPath: ResultPath.LAMBDA_INVOKE
+      resultPath: ResultPath.LAMBDA
     });
   }
 }

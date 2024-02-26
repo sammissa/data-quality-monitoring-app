@@ -42,7 +42,7 @@ describe('Lambda', () => {
         }
       },
       FunctionName: 'test-content-provider-LambdaFunction',
-      Handler: 'index.handler',
+      Handler: 'processQueryResults.handler',
       Runtime: 'nodejs18.x',
       Timeout: 30
     };
@@ -106,11 +106,11 @@ describe('Lambda', () => {
           ]
         },
         Payload: {
-          'ResultSet.$': `${ResultPath.ATHENA_GET_QUERY_RESULTS}.resultSet`,
-          'ObjectKey.$': `${ResultPath.EXECUTION_INPUT}.key`
+          'queryExecutionId.$':  `${ResultPath.ATHENA}.startQueryExecution.queryExecutionId`,
+          'resultSet.$': `${ResultPath.ATHENA}.getQueryResults.resultSet`
         }
       },
-      ResultPath: ResultPath.LAMBDA_INVOKE,
+      ResultPath: ResultPath.LAMBDA,
       ResultSelector: {
         'results.$': '$.Payload.results'
       },

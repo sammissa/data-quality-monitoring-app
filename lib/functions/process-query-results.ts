@@ -34,16 +34,16 @@ export const handler = async (event: any): Promise<{ results: { [key: string]: a
     return { results };
   }
 
-  const { ObjectKey, ResultSet } = event;
-  if (!ObjectKey || !ResultSet) {
-    logger.error('Error: No ObjectKey or ResultSet found in event');
+  const { queryExecutionId, resultSet } = event;
+  if (!queryExecutionId || !resultSet) {
+    logger.error('Error: No query execution id or result set found in event');
     return { results };
   }
 
-  logger.info(`Starting to process query results from: ${ObjectKey}`);
+  logger.info(`Starting to process results from query execution id: ${queryExecutionId}`);
 
   try {
-    const { ResultSetMetadata, Rows } = ResultSet;
+    const { ResultSetMetadata, Rows } = resultSet;
     const { ColumnInfo } = ResultSetMetadata;
 
     if (Rows && Rows.length === 2) {
@@ -57,15 +57,15 @@ export const handler = async (event: any): Promise<{ results: { [key: string]: a
         results[columnNames[index]] = values[index];
       }
     } else if (Rows && Rows.length > 2) {
-      logger.error(`Error: ResultSet should have 2 rows but it has ${Rows.length} rows`);
+      logger.error(`Error: Result set should have 2 rows but it has ${Rows.length} rows`);
     } else {
-      logger.error('Error: ResultSet is empty or does not have enough rows');
+      logger.error('Error: Result set is empty or does not have enough rows');
     }
   } catch (error) {
     logger.error(`Error: ${error}`);
   }
 
-  logger.info(`Finished processing query results from: ${ObjectKey}`);
+  logger.info(`Finished processing results from query execution id: ${queryExecutionId}`);
   return {
     results: results
   };
