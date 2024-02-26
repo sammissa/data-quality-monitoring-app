@@ -47,7 +47,7 @@ jobs:
 
   e2e-test:
     name: End to end test on node ${{ matrix.node_version }} and ${{ matrix.os }}
-    needs: build
+    needs: unit-test
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ${{ matrix.os }}
     strategy:
