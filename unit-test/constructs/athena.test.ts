@@ -1,8 +1,5 @@
 import { App, Stack } from 'aws-cdk-lib';
-import { Grant, Role } from 'aws-cdk-lib/aws-iam';
-import { anyOfClass, anyString, instance, mock, when } from 'ts-mockito';
 import { Athena } from '../../lib/constructs/athena';
-import { Bucket } from 'aws-cdk-lib/aws-s3';
 import { ResultPath } from '../../lib/constants';
 import { Template } from 'aws-cdk-lib/assertions';
 

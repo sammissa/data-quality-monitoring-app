@@ -32,11 +32,6 @@ export class S3 extends Construct {
     this.outputBucket = this.createBucket(props.stackPrefix + BucketNameSuffix.OUTPUT, 'OutputBucket');
   }
 
-  /**
-     * Creates a s3 bucket with lifecycle rules and encryption.
-     * @param bucketName - Name of the s3 bucket
-     * @param id - ID of the s3 bucket
-     */
   private createBucket(bucketName: string, id: string): Bucket {
     return new Bucket(this, id, {
       bucketName: bucketName,
