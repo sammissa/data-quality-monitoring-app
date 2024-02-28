@@ -94,6 +94,7 @@ describe('ContentProvider', () => {
     expect(definitionJsonString).toMatch(/"Next\\":\\"Success\\"/);
 
     expect(definitionJsonString).toMatch(/"Default\\":\\"Publish Fail Topic\\"/);
+    expect(definitionJsonString).toMatch(/"Next\\":\\"Handle Fail\\"/);
     expect(definitionJsonString).toMatch(/"Next\\":\\"Fail\\"/);
   });
 });

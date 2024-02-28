@@ -5,10 +5,15 @@
     "data-quality-monitoring-app": "bin/data-quality-monitoring-app.js"
   },
   "scripts": {
+    "eslint:fix": "npx eslint . --ext .ts --fix ",
     "build": "tsc",
     "watch": "tsc -w",
     "test:unit": "jest --testPathPattern=unit-test",
-    "cdk": "cdk"
+    "test:e2e": "jest --testPathPattern=e2e-test",
+    "cdk": "cdk",
+    "cdk:deploy:dev": "cdk deploy --require-approval never --app='npx ts-node --prefer-ts-exts bin/dev.ts'",
+    "cdk:deploy:prod": "cdk deploy --require-approval never",
+    "cdk:destroy:dev": "cdk destroy --force --app=npx ts-node --prefer-ts-exts bin/dev.ts"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^1.6.1",
@@ -27,6 +32,9 @@
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.18.0",
+    "@aws-sdk/client-glue": "^3.523.0",
+    "@aws-sdk/client-s3": "^3.515.0",
+    "@aws-sdk/client-sfn": "^3.515.0",
     "aws-cdk-lib": "2.126.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.21",

@@ -21,6 +21,7 @@ function convertData(data: string, dataType: string): any {
   }
 }
 
+// TODO - Improve error handling by throwing errors to state machine during runtime
 /**
  * This function is called when a query is executed. It extracts the results from the query and returns them.
  *

@@ -71,7 +71,6 @@ describe('SNS', () => {
           ]
         ]
       },
-      OutputPath: ResultPath.RESULTS,
       ResultPath: ResultPath.SNS,
       ResultSelector: {
         'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
@@ -108,7 +107,6 @@ describe('SNS', () => {
           ]
         ]
       },
-      OutputPath: ResultPath.RESULTS,
       ResultPath: ResultPath.SNS,
       ResultSelector: {
         'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',

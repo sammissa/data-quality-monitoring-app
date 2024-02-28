@@ -1,11 +1,23 @@
-import { Chain, Choice, Condition, DefinitionBody, Fail, StateMachine, Succeed, Wait, WaitTime } from 'aws-cdk-lib/aws-stepfunctions';
+import {
+  Chain,
+  Choice,
+  Condition,
+  DefinitionBody,
+  Fail,
+  JsonPath,
+  Pass,
+  StateMachine,
+  Succeed,
+  Wait,
+  WaitTime
+} from 'aws-cdk-lib/aws-stepfunctions';
+import { Error, ResultPath } from '../constants';
 import { Athena } from './athena';
 import { Construct } from 'constructs';
 import { Database } from './database';
 import { Duration } from 'aws-cdk-lib';
 import { Glue } from './glue';
 import { Lambda } from './lambda';
-import { ResultPath } from '../constants';
 import { Rule } from 'aws-cdk-lib/aws-events';
 import { S3 } from './s3';
 import { SNS } from './sns';
@@ -30,6 +42,7 @@ export interface ContentProviderProps {
   readonly databaseConstruct: Database;
 }
 
+// TODO - Add error handling to state machine tasks at runtime
 /**
  * Construct to create a content provider. This construct creates an AWS Glue crawler, an AWS Athena Workgroup,
  * an AWS Lambda function, and an AWS SNS topic. It also creates an AWS Step Functions state machine that orchestrates
@@ -100,20 +113,33 @@ export class ContentProvider extends Construct {
   }
 
   private getSuccessTaskChain(): Chain {
-    const publishSuccessTopicTask = this.snsConstruct.publishSuccessTopic('Publish Success Topic');
-    const success = new Succeed(this, 'Success');
+    const publishSuccessTopic = this.snsConstruct.publishSuccessTopic('Publish Success Topic');
+    const success = new Succeed(this, 'Success', {
+      outputPath: ResultPath.RESULTS
+    });
 
-    return Chain.start(publishSuccessTopicTask)
+    return Chain.start(publishSuccessTopic)
       .next(success);
   }
 
   private getFailTaskChain(): Chain {
-    const publishFailTopicTask = this.snsConstruct.publishFailTopic('Publish Fail Topic');
-    const fail = new Fail(this, 'Fail', {
-      error: 'Query failed'
+    const publishFailTopic = this.snsConstruct.publishFailTopic('Publish Fail Topic');
+
+    const handleFail = new Pass(this, 'Handle Fail', {
+      parameters: {
+        errorType: Error.INVALID_CONTENT_PROVIDER_FILE_ERROR,
+        errorMessage: 'Ingested content provider file failed query validation.'
+      },
+      resultPath: ResultPath.ERROR
     });
 
-    return Chain.start(publishFailTopicTask)
+    const fail = new Fail(this, 'Fail', {
+      errorPath: JsonPath.stringAt(`${ResultPath.ERROR}.errorType`),
+      causePath: JsonPath.jsonToString(JsonPath.objectAt(`${ResultPath.RESULTS}`))
+    });
+
+    return Chain.start(publishFailTopic)
+      .next(handleFail)
       .next(fail);
   }
 

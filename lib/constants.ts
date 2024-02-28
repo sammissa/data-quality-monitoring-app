@@ -17,10 +17,15 @@ export enum ContentProviderPath {
     BETA = 'beta-content-provider',
 }
 
-export const ResultPath = {
-  RESULTS: '$.results',
-  GLUE: '$.results.glue',
-  ATHENA: '$.results.athena',
-  LAMBDA: '$.results.lambda',
-  SNS: '$.results.sns'
-};
+export enum ResultPath {
+  RESULTS = '$.results',
+  GLUE = '$.results.glue',
+  ATHENA = '$.results.athena',
+  LAMBDA = '$.results.lambda',
+  SNS = '$.results.sns',
+  ERROR = '$.results.error'
+}
+
+export enum Error {
+    INVALID_CONTENT_PROVIDER_FILE_ERROR = 'InvalidContentProviderFileError',
+}

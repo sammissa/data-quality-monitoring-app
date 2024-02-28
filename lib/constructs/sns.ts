@@ -81,8 +81,7 @@ export class SNS extends Construct {
         'statusCode.$': '$.SdkHttpMetadata.HttpStatusCode',
         subject: subject
       },
-      resultPath: ResultPath.SNS,
-      outputPath: ResultPath.RESULTS
+      resultPath: ResultPath.SNS
     });
   }
 
