@@ -123,6 +123,7 @@ async function getObjectFromS3(fileName: string): Promise<string> {
   return fileContentToString;
 }
 
+// TODO - Add more e2e tests to test fringe cases, i.e. multiple file upload/invalid format/empty query results etc
 describe('End-to-End Tests', () => {
   beforeAll(async () => {
     const devStateMachine = await findDevStateMachine();
@@ -200,7 +201,6 @@ describe('End-to-End Tests', () => {
     expect(statusCode).toEqual(200);
   }, 300000);
 
-  // TODO Add more e2e tests to test fringe cases, i.e. multiple file upload/invalid format/empty query results etc
   test('Test state machine fail path', async () => {
     await uploadFileToS3('fail-path', 'invalid-file');
 

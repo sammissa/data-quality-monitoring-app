@@ -13,7 +13,7 @@
     "cdk": "cdk",
     "cdk:deploy:dev": "cdk deploy --require-approval never --app='npx ts-node --prefer-ts-exts bin/dev.ts'",
     "cdk:deploy:prod": "cdk deploy --require-approval never",
-    "cdk:destroy:dev": "cdk destroy --force --app=npx ts-node --prefer-ts-exts bin/dev.ts"
+    "cdk:destroy:dev": "cdk destroy --force --app='npx ts-node --prefer-ts-exts bin/dev.ts'"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^1.6.1",

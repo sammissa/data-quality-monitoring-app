@@ -43,6 +43,7 @@ export class Athena extends Construct {
       '_'
     );
 
+    // TODO Implement a better way to construct athena query strings
     this.queryString = readFileSync(`./resources/${props.contentProviderPath}/athena-query.sql`, 'utf-8')
       .replace('${DATABASE}', props.databaseName)
       .replace('${TABLE}', tableName);
