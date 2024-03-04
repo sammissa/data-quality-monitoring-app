@@ -16,7 +16,7 @@
     "cdk:destroy:dev": "cdk destroy --force --app='npx ts-node --prefer-ts-exts bin/dev.ts'"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^1.6.1",
+    "@stylistic/eslint-plugin": "^1.6.3",
     "@types/aws-lambda": "^8.10.133",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.24",
