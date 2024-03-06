@@ -60,7 +60,7 @@ describe('S3', () => {
 
   test('creates an input S3 bucket with the correct properties', () => {
     const expectedInputBucketProps = {
-      BucketName: 'test-stack-input-bucket',
+      BucketName: 'test-stack-input-s3bucket',
       ...defaultS3BucketProps
     };
 
@@ -70,7 +70,7 @@ describe('S3', () => {
 
   test('creates an output S3 bucket with the correct properties', () => {
     const expectedOutputBucketProps = {
-      BucketName: 'test-stack-output-bucket',
+      BucketName: 'test-stack-output-s3bucket',
       ...defaultS3BucketProps
     };
 
