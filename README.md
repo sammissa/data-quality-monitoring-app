@@ -13,12 +13,10 @@
 ### Introduction
 The Data Quality Monitoring App is a solution designed to monitor and ensure the quality of data ingested from various 
 content providers meets the standards set in the agreed contracts. The app is designed to address two specific objectives:
-1. **Automate data quality monitoring for Content Providers**:
-The app automates the validation of ingested Content Provider data files, performs data quality checks, and promptly notifies
-stakeholders about the validation results.
-2. **Simplify creation of AWS infrastructure for additional Content Providers**:
-Leveraging AWS CDK, the app simplifies the process of creating the necessary AWS infrastructure for additional content providers.
-
+1. **Build a data quality monitoring application**:
+Build a scalable AWS application that automates data quality checks on new data and sends results to subscribed stakeholders within 1 hour.
+2. **Maximise initial error detection**:
+Pilot the application with the Beta Content Provider, which supplies 70% of existing Q&A pairs.
 ### Directory
 * [.github](.github) - contains the GitHub workflow files
 * bin - directory for executable scripts

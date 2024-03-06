@@ -108,7 +108,7 @@ async function describeExecution(executionArn: string): Promise<DescribeExecutio
 
 async function getObjectFromS3(fileName: string): Promise<string> {
   const getObjectCommand = new GetObjectCommand({
-    Bucket: 'dqmadevstack-output-bucket',
+    Bucket: StackName.DEV.toLowerCase() + BucketNameSuffix.OUTPUT.toLowerCase(),
     Key: `beta-content-provider/${fileName}`
   });
   const getObjectOutput: GetObjectCommandOutput = await s3Client.send(getObjectCommand);
@@ -158,7 +158,8 @@ describe('End-to-End Tests', () => {
     const { source, 'detail-type': detailType, detail: { bucket: { name }, object: { key } }  } = JSON.parse(executionInput);
     expect(source).toEqual('aws.s3');
     expect(detailType).toEqual('Object Created');
-    expect(name).toEqual('dqmadevstack-input-bucket');
+    const bucketName = StackName.DEV.toLowerCase() + BucketNameSuffix.INPUT.toLowerCase();
+    expect(name).toEqual(bucketName);
     expect(key).toEqual('beta-content-provider/success-path/valid-file.csv');
 
     // execution output is correct
@@ -172,7 +173,7 @@ describe('End-to-End Tests', () => {
     expect(Classifiers).toContain('beta-content-provider-devGlueClassifier');
     expect(Name).toEqual('beta-content-provider-devGlueCrawler');
     expect(DatabaseName).toEqual('dqmadevstack_glue_database');
-    expect(Path).toEqual('s3://dqmadevstack-input-bucket/beta-content-provider/');
+    expect(Path).toEqual(`s3://${bucketName}/beta-content-provider/`);
 
     // athena output is correct
     expect(athena).toBeDefined();
@@ -223,7 +224,8 @@ describe('End-to-End Tests', () => {
     const { source, 'detail-type': detailType, detail: { bucket: { name }, object: { key } }  } = JSON.parse(executionInput);
     expect(source).toEqual('aws.s3');
     expect(detailType).toEqual('Object Created');
-    expect(name).toEqual('dqmadevstack-input-bucket');
+    const bucketName = StackName.DEV.toLowerCase() + BucketNameSuffix.INPUT.toLowerCase();
+    expect(name).toEqual(bucketName);
     expect(key).toEqual('beta-content-provider/fail-path/invalid-file.csv');
 
     // execution error is correct
@@ -242,7 +244,7 @@ describe('End-to-End Tests', () => {
     expect(Classifiers).toContain('beta-content-provider-devGlueClassifier');
     expect(Name).toEqual('beta-content-provider-devGlueCrawler');
     expect(DatabaseName).toEqual('dqmadevstack_glue_database');
-    expect(Path).toEqual('s3://dqmadevstack-input-bucket/beta-content-provider/');
+    expect(Path).toEqual(`s3://${bucketName}/beta-content-provider/`);
 
     // athena output is correct
     expect(athena).toBeDefined();

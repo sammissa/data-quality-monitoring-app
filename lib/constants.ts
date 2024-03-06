@@ -9,8 +9,8 @@ export enum Stage {
 }
 
 export enum BucketNameSuffix {
-    INPUT = '-input-bucket',
-    OUTPUT = '-output-bucket',
+    INPUT = '-input-s3bucket',
+    OUTPUT = '-output-s3bucket',
 }
 
 export enum ContentProviderPath {
