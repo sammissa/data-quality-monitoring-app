@@ -18,25 +18,46 @@ Build a scalable AWS application that automates data quality checks on new data 
 2. **Maximise initial error detection**:
 Pilot the application with the Beta Content Provider, which supplies 70% of existing Q&A pairs.
 ### Directory
-* [.github](.github) - contains the GitHub workflow files
-* bin - directory for executable scripts
+* [.github](.github) - directory for GitHub files
+  * [workflows](.github/workflows) - directory for workflows
+    * [build](.github/workflows/build.yml) - CI/CD workflow to unit test, e2e-test and, deploy app
+    * [super-linter](.github/workflows/super-linter.yml) - Lint workflow to lint codebase
+  * [dependabot](.github/dependabot.yml) - dependabot workflow to scan for outdated dependencies
+* [bin](bin) - directory for executable scripts
   * [dev](bin/dev.ts) - creates app dev stack
   * [prod](bin/prod.ts) - creates app prod stack
-* lib - main library directory
-  * constructs - directory for reusable CDK constructs
-    * [s3](lib/constructs/s3.ts) - S3 Construct for creating app input and output buckets
-    * [database](lib/constructs/database.ts) - Database Construct for creating app database
-    * [glue](lib/constructs/glue.ts) - Glue construct for creating Glue resources
-    * [athena](lib/constructs/athena.ts) - Athena construct for creating Athena resources
-    * [lambda](lib/constructs/lambda.ts) - Lambda construct for creating Lambda resources
-    * [sns](lib/constructs/sns.ts) - SNS construct for creating SNS topics and subscriptions
-    * [content-provider](lib/constructs/content-provider.ts) - Construct for creating Content Provider specific step functions
-  * functions - directory for lambda functions
-    * [process-query-results](lib/functions/process-query-results.ts) - lambda function that processes Athena query results at runtime
-  * [index](lib/index.ts) - main entry point for creating the app stack 
+* [lib](lib) - main library directory
+  * [constructs](lib/constructs) - directory for reusable CDK constructs
+    * [s3.ts](lib/constructs/s3.ts) - construct for creating app input and output buckets
+    * [database.ts](lib/constructs/database.ts) - construct for creating app database
+    * [glue.ts](lib/constructs/glue.ts) - construct for creating Glue resources
+    * [athena.ts](lib/constructs/athena.ts) - construct for creating Athena resources
+    * [lambda.ts](lib/constructs/lambda.ts) - construct for creating Lambda resources
+    * [sns.ts](lib/constructs/sns.ts) - construct for creating SNS topics and subscriptions
+    * [content-provider.ts](lib/constructs/content-provider.ts) - construct for creating Content Provider specific step functions
+  * [functions](lib/functions) - directory for lambda functions
+    * [process-query-results.ts](lib/functions/process-query-results.ts) - lambda function that processes Athena query results at runtime
+    * [index.ts](lib/functions/index.ts) - exports process query results handler
+  * [index.ts](lib/index.ts) - main entry point for creating the app stack 
 * [resources](resources) - directory for containing content provider specific resources
+  * [beta-content-provider](resources/beta-content-provider) - directory for beta content provider resources
+    * [athena-query.sql](resources/beta-content-provider/athena-query.sql) - data quality check in the format of a statistical SQL query
+    * [sns-config.json](resources/beta-content-provider/sns-config.json) - SNS config containing message format and topic subscriptions
+  * [test-content-provider](resources/test-content-provider) - directory for test resources 
 * [unit-test](unit-test) - directory for unit tests
+  * [constructs](unit-test/constructs) - directory for CDK construct unit tests
+    * [s3.test.ts](unit-test/constructs/s3.test.ts) - unit tests for s3 construct
+    * [database.test.ts](unit-test/constructs/database.test.ts) - unit tests for database construct
+    * [glue.test.ts](unit-test/constructs/glue.test.ts) - unit tests for database construct
+    * [athena.test.ts](unit-test/constructs/athena.test.ts) - unit tests for athena construct
+    * [lambda.test.ts](unit-test/constructs/lambda.test.ts) - unit tests for lambda construct
+    * [sns.test.ts](unit-test/constructs/sns.test.ts) - unit tests for sns construct
+    * [content-provider.test.ts](unit-test/constructs/content-provider.test.ts) - unit tests for content provider construct
+  * [functions](unit-test/functions) - directory for lambda function tests
+      * [process-query-results.test.ts](unit-test/functions/process-query-results.test.ts) - unit tests for process query results handler
+  * [index.test.ts](unit-test/index.test.ts) - unit tests for app stack
 * [e2e-test](e2e-test) - directory for end-to-end tests
+  * [beta-content-provider.test.ts](e2e-test/beta-content-provider.test.ts) - e2e tests for beta content provider
 
 ### Deployment
 Automatic deployment is handled through GitHub actions (see: [build workflow](.github/workflows/build.yml)), which executes three jobs:

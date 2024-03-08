@@ -34,7 +34,7 @@ export class SNS extends Construct {
 
     this.contentProviderPath = props.contentProviderPath;
 
-    // TODO Implement a better way to construct sns messages
+    // TODO - Implement a better way to construct sns messages and relay important information
     const snsConfig = JSON.parse(readFileSync(`./resources/${this.contentProviderPath}/sns-config.json`, 'utf-8'));
     const { Message, Fields, FailTopicSubscriptions, SuccessTopicSubscriptions } = snsConfig;
     const processedFields = Fields.map((field: string) => JsonPath.stringAt(`${ResultPath.LAMBDA}.results.${field}`));

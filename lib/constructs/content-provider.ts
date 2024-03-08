@@ -95,6 +95,7 @@ export class ContentProvider extends Construct {
       timeout: Duration.minutes(5)
     });
 
+    // TODO - Add filtering to only allow 'CompleteMultipartUpload' to trigger step functions
     new Rule(this, 'EventsRule', {
       targets: [ new SfnStateMachine(stepFunction) ],
       eventPattern: {

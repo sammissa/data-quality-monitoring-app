@@ -22,6 +22,7 @@ const glueClient = new GlueClient(clientConfig);
 
 let stateMachineArn: string;
 
+// TODO - Move SDK methods into a separate test class for re-usability
 async function waitForCrawler(): Promise<void> {
   let getCrawlerCommand = new GetCrawlerCommand({ Name: 'beta-content-provider-devGlueCrawler' });
   let getCrawlerResponse: GetCrawlerResponse = await glueClient.send(getCrawlerCommand);
@@ -124,7 +125,7 @@ async function getObjectFromS3(fileName: string): Promise<string> {
 }
 
 // TODO - Add more e2e tests to test fringe cases, i.e. multiple file upload/invalid format/empty query results etc
-describe('End-to-End Tests', () => {
+describe('Beta Content Provider End-to-End Tests', () => {
   beforeAll(async () => {
     const devStateMachine = await findDevStateMachine();
     expect(devStateMachine).toBeDefined();
